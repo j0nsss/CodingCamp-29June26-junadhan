@@ -144,7 +144,7 @@ body {
   font-weight: 800;
   letter-spacing: -0.01em;
   text-transform: uppercase;
-  color: var(--base-ink);
+  color: #000000;           /* selalu hitam di kedua mode */
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -398,14 +398,20 @@ body {
 }
 
 /* Peta warna tombol ke palette colors.md */
-.btn-primary { background: var(--accent-lime); }
+.btn-primary {
+  background: var(--accent-lime);
+  color: #000000;           /* teks & icon selalu hitam di lime */
+}
 
 .btn-success {
   background: var(--feedback-success);
-  color: var(--base-surface);
+  color: #000000;           /* teks & icon selalu hitam di green */
 }
 
-.btn-warning { background: var(--accent-orange); }
+.btn-warning {
+  background: var(--accent-orange);
+  color: #000000;           /* teks & icon selalu hitam di orange */
+}
 
 .btn-danger {
   background: var(--feedback-danger);
@@ -431,6 +437,7 @@ body {
 /* Saat sort aktif, highlight dengan accent-lime */
 .btn-xs.btn-primary {
   background: var(--accent-lime);
+  color: #000000;
   box-shadow: var(--shadow-pressed);
 }
 
@@ -510,7 +517,7 @@ body {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--base-ink);
+  color: #000000;           /* selalu hitam di kedua mode */
   background: var(--accent-lime);
   padding: 2px 8px;
   border: 2px solid var(--border);

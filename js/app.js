@@ -51,13 +51,33 @@ const htmlEl         = document.documentElement;
 
 function applyTheme(theme) {
   htmlEl.setAttribute("data-theme", theme);
-  themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
-  Storage.set(STORAGE_KEYS.THEME, theme);
+  // Ganti SVG icon: Moon (dark mode) / Sun (light mode)
+  const moonSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>`;
+  const sunSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1"  x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22"   x2="5.64"  y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1"  y1="12" x2="3"  y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78"  x2="5.64"  y2="18.36"/>
+    <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+  </svg>`;
+  themeIcon.innerHTML = theme === "dark" ? sunSVG : moonSVG;
+  // Tidak disimpan ke LocalStorage — setiap buka halaman selalu light
 }
 
 function initTheme() {
-  const saved = Storage.get(STORAGE_KEYS.THEME, "light");
-  applyTheme(saved);
+  // Selalu mulai dengan light mode saat pertama kali membuka halaman.
+  // Preferensi dark mode tidak dipertahankan antar sesi.
+  applyTheme("light");
 }
 
 themeToggleBtn.addEventListener("click", () => {
@@ -86,10 +106,7 @@ function getGreetingWord(hour) {
 }
 
 function getGreetingEmoji(hour) {
-  if (hour >= 5  && hour < 12) return "🌤️";
-  if (hour >= 12 && hour < 15) return "☀️";
-  if (hour >= 15 && hour < 19) return "🌅";
-  return "🌙";
+  return ""; // tidak pakai emoji
 }
 
 function pad(n) { return String(n).padStart(2, "0"); }
@@ -100,12 +117,11 @@ function updateClock() {
   const minute  = now.getMinutes();
   const name    = Storage.get(STORAGE_KEYS.NAME, "");
   const greeting = getGreetingWord(hour);
-  const emoji    = getGreetingEmoji(hour);
 
   greetingTimeEl.textContent = `${pad(hour)}:${pad(minute)}`;
   greetingTextEl.textContent = name
-    ? `${emoji} ${greeting}, ${name}!`
-    : `${emoji} ${greeting}!`;
+    ? `${greeting}, ${name}!`
+    : `${greeting}!`;
 
   const dateStr = `${DAYS_ID[now.getDay()]}, ${now.getDate()} ${MONTHS_ID[now.getMonth()]} ${now.getFullYear()}`;
   greetingDateEl.textContent = dateStr;
@@ -122,7 +138,7 @@ saveNameBtn.addEventListener("click", () => {
   const name = userNameInput.value.trim();
   Storage.set(STORAGE_KEYS.NAME, name);
   updateClock();
-  showToast(saveNameBtn, name ? `Halo, ${name}! 👋` : "Nama dihapus.");
+  showToast(saveNameBtn, name ? `Halo, ${name}!` : "Nama dihapus.");
 });
 
 userNameInput.addEventListener("keydown", (e) => {
@@ -142,15 +158,19 @@ function showToast(anchorBtn, message) {
   toast.style.cssText = `
     position: fixed;
     bottom: 1.5rem; right: 1.5rem;
-    background: var(--accent);
-    color: white;
-    padding: 0.55rem 1.1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    background: #D4FF3F;
+    color: #000000;
+    padding: 0.6rem 1.2rem;
+    border: 3px solid #000000;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 4px 4px 0px #000000;
     z-index: 999;
-    animation: fadeSlideIn 0.2s ease;
+    animation: fadeSlideIn 0.18s ease;
   `;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2500);
@@ -229,7 +249,7 @@ function timerStart() {
       timerStopBtn.disabled  = true;
       timerDurationInput.disabled = false;
       timerLabelEl.textContent = "Selesai!";
-      timerNotifEl.textContent = "🎉 Sesi fokus selesai! Saatnya istirahat.";
+      timerNotifEl.textContent = "Sesi fokus selesai! Saatnya istirahat.";
       timerNotifEl.classList.remove("hidden");
 
       // Browser notification (if permitted)
@@ -375,8 +395,24 @@ function renderTodos() {
       />
       <span class="todo-text">${escapeHtml(todo.text)}</span>
       <div class="todo-actions">
-        <button class="todo-btn edit"   title="Edit tugas"  aria-label="Edit: ${todo.text}">✏️</button>
-        <button class="todo-btn delete" title="Hapus tugas" aria-label="Hapus: ${todo.text}">🗑️</button>
+        <button class="todo-btn edit" title="Edit tugas" aria-label="Edit: ${todo.text}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+        <button class="todo-btn delete" title="Hapus tugas" aria-label="Hapus: ${todo.text}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/><path d="M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </button>
       </div>
     `;
 
@@ -403,7 +439,7 @@ function addTodo() {
     return;
   }
   if (isDuplicate(text)) {
-    showTodoNotif(`⚠️ Tugas "${text}" sudah ada dalam daftar!`);
+    showTodoNotif(`Tugas "${text}" sudah ada dalam daftar!`);
     todoInput.select();
     return;
   }
@@ -412,7 +448,7 @@ function addTodo() {
   renderTodos();
   todoInput.value = "";
   todoInput.focus();
-  showTodoNotif("✅ Tugas berhasil ditambahkan!", false);
+  showTodoNotif("Tugas berhasil ditambahkan!", false);
 }
 
 function toggleTodo(id) {
@@ -462,7 +498,7 @@ function saveEdit() {
   );
   if (duplicate) {
     editTodoInput.setCustomValidity("Duplikat");
-    showTodoNotif(`⚠️ Tugas "${newText}" sudah ada dalam daftar!`);
+    showTodoNotif(`Tugas "${newText}" sudah ada dalam daftar!`);
     return;
   }
 
@@ -574,7 +610,14 @@ function renderLinks() {
          style="color:inherit;text-decoration:none;" title="${escapeHtml(link.url)}">
         ${escapeHtml(link.label)}
       </a>
-      <button class="link-delete-btn" title="Hapus link" aria-label="Hapus ${escapeHtml(link.label)}">✕</button>
+      <button class="link-delete-btn" title="Hapus link" aria-label="Hapus ${escapeHtml(link.label)}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6"  y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
     `;
 
     chip.querySelector(".link-delete-btn").addEventListener("click", (e) => {
@@ -610,7 +653,7 @@ function addLink(e) {
   linkLabelInput.value = "";
   linkUrlInput.value   = "";
   linkLabelInput.focus();
-  showLinkNotif(`🔗 "${label}" ditambahkan!`, false);
+  showLinkNotif(`"${label}" ditambahkan!`, false);
 }
 
 function deleteLink(id) {

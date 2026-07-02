@@ -9,10 +9,11 @@
 
 /* ----- 2. CSS TOKENS (mapping 1-to-1 dari colors.md) ----- */
 :root {
-  /* === Base === */
+  /* === Base (Light Mode) === */
   --base-bg:      #F4F4F0;   /* Off-white background        */
-  --base-ink:     #000000;   /* Border & teks utama         */
+  --base-ink:     #000000;   /* Teks utama                  */
   --base-surface: #FFFFFF;   /* Card background             */
+  --border:       #000000;   /* Border brutal hitam         */
 
   /* === Accent === */
   --accent-lime:   #D4FF3F;
@@ -38,25 +39,42 @@
 
   /* === Border === */
   --border-width: 3px;        /* borderWidth: { 3: "3px" }  */
-  --border:       var(--base-ink);
   --radius:       4px;        /* borderRadius: { brutal: "4px" } */
 
   --transition: 0.12s ease;
 }
 
 /* ── Dark Mode ──
-   Prinsip: surface & bg gelap, ink jadi putih, accent tetap,
-   shadow ikut warna ink (putih) agar tetap terlihat           */
+   Token dari colors.md (dark palette):
+   - bg: #0C0C0C (hitam pekat)
+   - ink: #FFFFFF (putih)
+   - surface: #1A1A1A (abu sangat gelap)
+   - border: #000000 (hitam, tetap konsisten brutal)
+   - shadow: #000000 (hitam untuk depth, bukan putih)
+   - accent: lime/pink/orange/blue versi lebih terang
+   - feedback: success/danger neon                           */
 [data-theme="dark"] {
-  --base-bg:      #0f0f0d;
-  --base-ink:     #ffffff;
-  --base-surface: #1c1c19;
+  --base-bg:      #0C0C0C;
+  --base-ink:     #FFFFFF;
+  --base-surface: #1A1A1A;
+  --border:       #000000;     /* border tetap hitam brutal */
 
-  --shadow:         4px 4px 0px #ffffff;
-  --shadow-sm:      2px 2px 0px #ffffff;
-  --shadow-lg:      8px 8px 0px #ffffff;
-  --shadow-pressed: 1px 1px 0px #ffffff;
-  --shadow-accent:  4px 4px 0px #D4FF3F;
+  /* Accent disesuaikan untuk kontras gelap */
+  --accent-lime:   #E1FF66;
+  --accent-pink:   #FF5E9E;
+  --accent-orange: #FF7E36;
+  --accent-blue:   #59A5FF;
+
+  /* Feedback neon */
+  --feedback-success: #00E676;
+  --feedback-danger:  #FF453A;
+
+  /* Shadow tetap hitam untuk kedalaman brutal di atas surface gelap */
+  --shadow:         4px 4px 0px #000000;
+  --shadow-sm:      2px 2px 0px #000000;
+  --shadow-lg:      8px 8px 0px #000000;
+  --shadow-pressed: 1px 1px 0px #000000;
+  --shadow-accent:  4px 4px 0px #E1FF66;
 }
 
 /* ----- 3. RESET & BASE ----- */
@@ -110,7 +128,7 @@ body {
   padding: 0 1.5rem;
   height: 60px;
   background: var(--accent-lime);
-  border-bottom: var(--border-width) solid var(--base-ink);
+  border-bottom: var(--border-width) solid var(--border);
   transition: background-color var(--transition);
 }
 
@@ -129,7 +147,7 @@ body {
 .btn-icon {
   font-family: var(--font-display);
   background: var(--base-surface);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   box-shadow: var(--shadow-sm);
   border-radius: var(--radius);
   width: 40px;
@@ -179,7 +197,7 @@ body {
 /* ----- 6. CARD ----- */
 .card {
   background: var(--base-surface);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 1.5rem;
@@ -199,7 +217,7 @@ body {
   justify-content: space-between;
   margin-bottom: 1.25rem;
   padding-bottom: 0.85rem;
-  border-bottom: var(--border-width) solid var(--base-ink);
+  border-bottom: var(--border-width) solid var(--border);
   gap: 0.5rem;
   flex-wrap: wrap;
 }
@@ -251,7 +269,7 @@ body {
   height: 5px;
   width: 55%;
   background: var(--accent-lime);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   margin-top: 6px;
 }
 
@@ -303,7 +321,7 @@ body {
 .input-field {
   flex: 1;
   padding: 0.6rem 0.9rem;
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   background: var(--base-bg);
   color: var(--base-ink);
@@ -342,7 +360,7 @@ body {
   justify-content: center;
   gap: 0.35rem;
   padding: 0.6rem 1.1rem;
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   font-size: 0.82rem;
   font-weight: 800;
@@ -431,7 +449,7 @@ body {
   display: grid;
   place-items: center;
   background: var(--base-bg);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
@@ -495,7 +513,7 @@ body {
   color: var(--base-ink);
   background: var(--accent-lime);
   padding: 2px 8px;
-  border: 2px solid var(--base-ink);
+  border: 2px solid var(--border);
   border-radius: var(--radius);
 }
 
@@ -524,7 +542,7 @@ body {
   padding: 0.5rem 0.85rem;
   background: var(--feedback-success);
   color: var(--base-surface);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   box-shadow: var(--shadow-sm);
   border-radius: var(--radius);
   width: 100%;
@@ -560,7 +578,7 @@ body {
   align-items: center;
   gap: 0.6rem;
   padding: 0.6rem 0.8rem;
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   background: var(--base-bg);
   box-shadow: var(--shadow-sm);
@@ -598,7 +616,7 @@ body {
   width: 20px;
   height: 20px;
   min-width: 20px;
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   background: var(--base-surface);
   cursor: pointer;
@@ -637,7 +655,7 @@ body {
 
 .todo-btn {
   background: var(--base-surface);
-  border: 2px solid var(--base-ink);
+  border: 2px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
   padding: 0.22rem 0.38rem;
@@ -682,7 +700,7 @@ body {
   gap: 0.4rem;
   padding: 0.45rem 0.9rem;
   background: var(--base-surface);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   font-family: var(--font-display);
@@ -753,7 +771,7 @@ body {
   font-size: 0.8rem;
   font-weight: 800;
   padding: 0.5rem 0.85rem;
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   text-transform: uppercase;
@@ -774,7 +792,7 @@ body {
 
 .modal {
   background: var(--base-surface);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
   padding: 2rem;
@@ -794,7 +812,7 @@ body {
   top: -2px;
   left: -2px;
   background: var(--accent-lime);
-  border: var(--border-width) solid var(--base-ink);
+  border: var(--border-width) solid var(--border);
   border-radius: var(--radius) 0 var(--radius) 0;
   font-family: var(--font-display);
   font-size: 0.62rem;
@@ -817,7 +835,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding-bottom: 0.75rem;
-  border-bottom: var(--border-width) solid var(--base-ink);
+  border-bottom: var(--border-width) solid var(--border);
 }
 
 .modal-actions {
@@ -834,7 +852,7 @@ body {
   font-size: 0.75rem;
   font-weight: 600;
   color: color-mix(in srgb, var(--base-ink) 45%, transparent);
-  border-top: var(--border-width) solid var(--base-ink);
+  border-top: var(--border-width) solid var(--border);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }

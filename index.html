@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Produktivitas</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- ===== HEADER / NAVBAR ===== -->
+    <header class="navbar">
+      <span class="navbar-brand">⚡ ProductivityHub</span>
+      <button id="theme-toggle" class="btn-icon" aria-label="Toggle tema">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </header>
+
+    <main class="container">
+      <!-- ===== GREETING SECTION ===== -->
+      <section class="card greeting-card" aria-label="Greeting">
+        <div class="greeting-content">
+          <p id="greeting-time" class="greeting-time">00:00</p>
+          <h1 id="greeting-text" class="greeting-text">Selamat Pagi!</h1>
+          <p id="greeting-date" class="greeting-date">Memuat tanggal...</p>
+        </div>
+        <div class="greeting-name-wrapper">
+          <label for="user-name-input" class="label-small">Nama kamu</label>
+          <div class="input-row">
+            <input
+              type="text"
+              id="user-name-input"
+              class="input-field"
+              placeholder="Masukkan namamu..."
+              maxlength="30"
+              autocomplete="off"
+            />
+            <button id="save-name-btn" class="btn btn-primary">Simpan</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== GRID: TIMER + TODO ===== -->
+      <div class="grid-two">
+        <!-- ===== FOCUS TIMER SECTION ===== -->
+        <section class="card timer-card" aria-label="Focus Timer">
+          <div class="card-header">
+            <h2 class="card-title">🍅 Focus Timer</h2>
+          </div>
+
+          <div class="timer-display-wrapper">
+            <svg class="timer-ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="timer-ring-bg" cx="60" cy="60" r="54" />
+              <circle
+                id="timer-ring-progress"
+                class="timer-ring-progress"
+                cx="60"
+                cy="60"
+                r="54"
+              />
+            </svg>
+            <div class="timer-display">
+              <span id="timer-display">25:00</span>
+              <span id="timer-label" class="timer-label">Fokus</span>
+            </div>
+          </div>
+
+          <div class="timer-duration-row">
+            <label for="timer-duration" class="label-small">Durasi (menit)</label>
+            <input
+              type="number"
+              id="timer-duration"
+              class="input-field input-small"
+              value="25"
+              min="1"
+              max="120"
+            />
+          </div>
+
+          <div class="timer-controls">
+            <button id="timer-start" class="btn btn-success">▶ Start</button>
+            <button id="timer-stop" class="btn btn-warning" disabled>⏸ Stop</button>
+            <button id="timer-reset" class="btn btn-danger">↺ Reset</button>
+          </div>
+
+          <div id="timer-notification" class="timer-notification hidden" role="status" aria-live="polite"></div>
+        </section>
+
+        <!-- ===== TO-DO LIST SECTION ===== -->
+        <section class="card todo-card" aria-label="To-Do List">
+          <div class="card-header">
+            <h2 class="card-title">📝 To-Do List</h2>
+            <div class="todo-sort-group">
+              <button id="sort-alpha" class="btn btn-outline btn-xs" title="Urutkan A-Z">A→Z</button>
+              <button id="sort-pending" class="btn btn-outline btn-xs" title="Belum selesai di atas">⬆ Aktif</button>
+            </div>
+          </div>
+
+          <div class="input-row">
+            <input
+              type="text"
+              id="todo-input"
+              class="input-field"
+              placeholder="Tambah tugas baru..."
+              maxlength="100"
+              autocomplete="off"
+            />
+            <button id="todo-add-btn" class="btn btn-primary">Tambah</button>
+          </div>
+
+          <div id="todo-notification" class="todo-notification hidden" role="alert" aria-live="assertive"></div>
+
+          <ul id="todo-list" class="todo-list" aria-label="Daftar tugas"></ul>
+
+          <p id="todo-empty" class="empty-state">Belum ada tugas. Tambahkan sekarang!</p>
+          <p id="todo-counter" class="todo-counter"></p>
+        </section>
+      </div>
+
+      <!-- ===== QUICK LINKS SECTION ===== -->
+      <section class="card links-card" aria-label="Quick Links">
+        <div class="card-header">
+          <h2 class="card-title">🔗 Quick Links</h2>
+        </div>
+
+        <form id="link-form" class="link-form" novalidate>
+          <input
+            type="text"
+            id="link-label"
+            class="input-field"
+            placeholder="Nama situs (contoh: GitHub)"
+            maxlength="30"
+            autocomplete="off"
+          />
+          <input
+            type="url"
+            id="link-url"
+            class="input-field"
+            placeholder="URL (contoh: https://github.com)"
+            autocomplete="off"
+          />
+          <button type="submit" class="btn btn-primary">+ Tambah Link</button>
+        </form>
+
+        <div id="link-notification" class="todo-notification hidden" role="alert" aria-live="assertive"></div>
+
+        <div id="links-container" class="links-container" aria-label="Daftar link favorit"></div>
+        <p id="links-empty" class="empty-state">Belum ada link. Tambahkan situs favoritmu!</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Dibuat dengan ❤️ · Dashboard Produktivitas · CodingCamp 2026</p>
+    </footer>
+
+    <!-- Edit Todo Modal -->
+    <div id="edit-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal">
+        <h3 id="modal-title" class="modal-title">Edit Tugas</h3>
+        <input
+          type="text"
+          id="edit-todo-input"
+          class="input-field"
+          maxlength="100"
+          autocomplete="off"
+        />
+        <div class="modal-actions">
+          <button id="edit-save-btn" class="btn btn-primary">Simpan</button>
+          <button id="edit-cancel-btn" class="btn btn-outline">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
